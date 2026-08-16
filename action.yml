@@ -54,7 +54,7 @@ runs:
 
     - name: Checkout source repository
       if: steps.skip_actor.outputs.skip != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
         fetch-tags: true
