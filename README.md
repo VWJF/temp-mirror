@@ -1,4 +1,4 @@
-# temp mirror
+# Sample repo gh-mirror
 
 
 
