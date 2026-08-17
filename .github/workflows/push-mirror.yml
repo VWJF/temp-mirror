@@ -28,7 +28,7 @@ jobs:
           lfs: true
 
       - name: Mirror GitHub ref to GitLab
-        uses: VWJF/mirroring@feat/github-gitlab-push-mirror
+        uses: VWJF/mirroring@main
         with:
           gitlab_url: ${{ vars.GITLAB_URL }}
           gitlab_username: ${{ vars.GITLAB_USERNAME || 'oauth2' }}

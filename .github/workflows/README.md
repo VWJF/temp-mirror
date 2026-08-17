@@ -7,7 +7,7 @@ This repository is a **caller** of the reusable Action in [VWJF/mirroring](https
 Push-mirrors the triggering GitHub ref to GitLab (`GITLAB_URL`).
 
 - Triggers: `push` (branches and tags), `workflow_dispatch`
-- Action: `VWJF/mirroring@feat/github-gitlab-push-mirror` (move to a tag or `@main` after that branch is merged)
+- Action: `VWJF/mirroring@main`
 - Concurrency is per ref; in-progress runs are **not** cancelled
 - Tag `create` is not a separate trigger: a tag push already fires `push`, so `on: create` caused two runs for one tag
 
