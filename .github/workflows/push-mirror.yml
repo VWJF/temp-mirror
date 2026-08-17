@@ -1,0 +1,39 @@
+name: Push mirror to GitLab
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to mirror (branch or tag name). Defaults to the repository default branch.
+        required: false
+        type: string
+
+concurrency:
+  group: push-mirror-${{ github.repository }}-${{ github.event.inputs.ref || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          lfs: true
+
+      - name: Mirror GitHub ref to GitLab
+        uses: VWJF/mirroring@feat/github-gitlab-push-mirror
+        with:
+          gitlab_url: ${{ vars.GITLAB_URL }}
+          gitlab_username: ${{ vars.GITLAB_USERNAME || 'oauth2' }}
+          gitlab_token: ${{ secrets.GITLAB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          only_protected_branches: ${{ vars.ONLY_PROTECTED_BRANCHES || 'true' }}
+          keep_divergent_refs: ${{ vars.KEEP_DIVERGENT_REFS || 'true' }}
+          skip_github_actors: ${{ vars.SKIP_GITHUB_ACTORS }}
