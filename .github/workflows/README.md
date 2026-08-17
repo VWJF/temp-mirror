@@ -6,15 +6,16 @@ This repository is a **caller** of the reusable Action in [VWJF/mirroring](https
 
 Push-mirrors the triggering GitHub ref to GitLab (`GITLAB_URL`).
 
-- Triggers: `push`, tag `create`, `workflow_dispatch`
+- Triggers: `push` (branches and tags), `workflow_dispatch`
 - Action: `VWJF/mirroring@feat/github-gitlab-push-mirror` (move to a tag or `@main` after that branch is merged)
 - Concurrency is per ref; in-progress runs are **not** cancelled
+- Tag `create` is not a separate trigger: a tag push already fires `push`, so `on: create` caused two runs for one tag
 
 ### Required GitHub configuration
 
 **Secret** (Settings → Secrets and variables → Actions → Secrets):
 
-- `GITLAB_TOKEN` — GitLab project or personal access token with `write_repository`. For a project access token, the token **role** must be Developer or Maintainer, not only those scopes.
+- `GITLAB_TOKEN` — GitLab project or personal access token with `write_repository`. For protected `main`, the token **role** must be **Maintainer** (Developer cannot push protected branches). You do not need to unprotect `main`.
 
 **Variables** (Settings → Secrets and variables → Actions → Variables):
 
@@ -30,6 +31,15 @@ Do not put the GitLab URL or token in this workflow file.
 
 ### Manual run
 
+GitHub only shows **Run workflow** for `workflow_dispatch` if this file exists on the **default branch** (`main`).
+
 Actions → **Push mirror to GitLab** → **Run workflow**. Optional input `ref` (branch or tag); empty uses the default branch.
 
 Full Action behavior, knobs, and bidirectional setup: [VWJF/mirroring](https://github.com/VWJF/mirroring).
+
+### Alerts
+
+- **GitLab → GitHub** (native push mirror): GitLab emails **project Maintainers/Owners** on the first failed remote-mirror update (including a keep-divergent skip). The project page also shows a warning and an Error badge. Later retries in the same failure streak do not send another mail.
+- **GitHub → GitLab** (this workflow): GitHub does **not** email all maintainers. The **user who pushed** may get an Actions failure mail if they have Actions notifications on. Other maintainers must **watch** this repo and enable **Actions / failed workflow** notifications, or they will miss a red run (including an intentional fail-closed divergence).
+
+Details: [VWJF/mirroring README — Alerts](https://github.com/VWJF/mirroring#alerts).
