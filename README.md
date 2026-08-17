@@ -1,4 +1,4 @@
-# Sample repository (gh-mirror)
+# Sample repository
 
 
 
