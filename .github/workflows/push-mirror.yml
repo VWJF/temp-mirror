@@ -2,7 +2,6 @@ name: Push mirror to GitLab
 
 on:
   push:
-  create:
   workflow_dispatch:
     inputs:
       ref:
@@ -19,7 +18,6 @@ permissions:
 
 jobs:
   mirror:
-    if: github.event_name != 'create' || github.event.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
