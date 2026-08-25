@@ -20,6 +20,8 @@ jobs:
   mirror:
     # If the server is github.com, use ubuntu-latest. Otherwise, use self-hosted.
     runs-on: ${{ github.server_url == 'https://github.com' && 'ubuntu-latest' || 'self-hosted' }}
+    # QUEUE PROTECTION: Kills the job if a self-hosted runner is offline/missing
+    timeout-minutes: 5
     steps:
       - name: Checkout source
         uses: actions/checkout@v5
