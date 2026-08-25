@@ -18,7 +18,8 @@ permissions:
 
 jobs:
   mirror:
-    runs-on: ubuntu-latest
+    # If the server is github.com, use ubuntu-latest. Otherwise, use self-hosted.
+    runs-on: ${{ github.server_url == 'https://github.com' && 'ubuntu-latest' || 'self-hosted' }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v5
